@@ -3,6 +3,9 @@ float bgScale = 0.07;
 int bgDark = #dbcfb9;
 int bgLight = #e7dbc4;
 
+PGraphics imgMask;
+PGraphics g;
+
 float gOffset = 10;
 
 PVector[][] field;
@@ -12,6 +15,7 @@ float fieldScale = 0.002;
 float fieldMag = 20;
 int weird = 10;
 
+PVector[] starts;
 int numLines = 6000;
 int steps = 100;
 float j = 1;
@@ -20,25 +24,20 @@ float minStroke = 1.2;
 float maxStroke = 2.1;
 
 int seed = 123;
-PVector center;
-PVector tri_center;
-ArrayList<PVector> tri;
-PVector v1, v2, v3;
-PVector[] starts;
 
 void setup() {
 
-  size(900, 900);
+  size(800, 800);
   smooth(8);
-  center = new PVector(width / 2, height / 2);
-  setTriangle();
   setBG();
+  setMask();
   restart();
 }
 
 void setRandom() {
   seed = (int) random(100000);
   noiseSeed(seed);
+  //noiseSeed(81464);
 }
 
 void restart() {
@@ -54,6 +53,7 @@ void draw() {
   drawBG();
   drawLines();
   //noise_offset += noise_delta;
+  //noLoop();
 }
 
 void keyPressed() {

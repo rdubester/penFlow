@@ -44,8 +44,15 @@ void setStartPoints() {
 }
 
 void drawLines() {
-  blendMode(MULTIPLY);
+  g = createGraphics(width, height);
+  g.beginDraw();
+  //g.blendMode(MULTIPLY);
+  g.background(0, 0);
   for (PVector start : starts) {
-    penAlong(trajectory(start, steps), false);
+    penAlong(trajectory(start, steps), g, false);
   }
+  //g.mask(imgMask);
+  subtractiveMask(g, imgMask);
+  g.endDraw();
+  image(g, 0, 0);
 }
