@@ -13,3 +13,7 @@ ArrayList<PVector> pointCircle(float x, float y, float r, int numPoints) {
   }
   return c;
 }
+
+//translate(-width/4, -height/4);
+//scale(1.5);
+//penAlong(tri, true);

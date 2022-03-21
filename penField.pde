@@ -1,9 +1,9 @@
 float bgScale = 0.07;
 int bgDark = #dbcfb9;
 int bgLight = #e7dbc4;
-//int bgDark = #f8feff;
-//int bgLight = #f8feff;
 float gOffset = 10;
+
+PGraphics bg;
 
 PVector[][] field;
 int fieldRes = 5;
@@ -11,7 +11,7 @@ int rows, cols;
 float fieldScale = 0.002;
 float fieldMag = 20;
 
-int numLines = 2000;
+int numLines = 6000;
 int steps = 100;
 
 int weird = 10;
@@ -28,10 +28,14 @@ PVector center;
 PVector tri_center;
 ArrayList<PVector> tri;
 PVector v1, v2, v3;
+PVector[] starts;
 
 void setup() {
+
   size(900, 900);
   smooth(8);
+  createBG();
+
   center = new PVector(width / 2, height / 2);
   tri_center = new PVector(width / 2, height / 1.8);
   PVector disp = PVector.fromAngle(-TAU / 4).mult(width / 2);
@@ -43,36 +47,47 @@ void setup() {
   tri.add(v2);
   tri.add(v3);
 
-  render();
-  //drawField();
-  //drawCircles();
-}
-
-void render() {
-  seed = (int) random(100000);
-  noiseSeed(seed);
-  drawBG();
-  blendMode(MULTIPLY);
   rows = height / fieldRes;
   cols = width / fieldRes;
+
+
+  starts = new PVector[numLines];
+  for (int i = 0; i < numLines; i++) {
+    starts[i] = new PVector(random(width), random(height));
+  }
+  oneShot();
+}
+
+void drawLines() {
+  blendMode(MULTIPLY);
+  for (PVector start : starts) {
+    penAlong(trajectory(start, steps), false);
+  }
+}
+
+void createField(float offset) {
   field = new PVector[rows][cols];
   for (int y = 0; y < rows; y++) {
     for (int x = 0; x < cols; x++) {
-      float theta = noise(x * fieldScale, y * fieldScale) * weird * TAU;
+      float theta = noise(x * fieldScale + offset, y * fieldScale + offset) * weird * TAU;
       field[y][x] = PVector.fromAngle(theta).mult(fieldMag);
     }
   }
-  ArrayList<PVector>[] paths = new ArrayList[numLines];
-  for (int i = 0; i < numLines; i++) {
-    PVector start = new PVector(random(width), random(height));
-    paths[i] = trajectory(start, steps);
-  }
-  //translate(-width/4, -height/4);
-  //scale(1.5);
-  for (ArrayList<PVector> path : paths) {
-    penAlong(path, false);
-  }
-  //penAlong(tri, true);
+}
+
+void drawBG() {
+  blendMode(BLEND);
+  image(bg, 0, 0);
+}
+
+void setRandom() {
+  seed = (int) random(100000);
+  noiseSeed(seed);
+}
+
+void oneShot() {
+  setRandom();
+  createField(0);
 }
 
 ArrayList<PVector> trajectory(PVector start, int steps) {
@@ -87,15 +102,18 @@ ArrayList<PVector> trajectory(PVector start, int steps) {
   return path;
 }
 
-void drawBG() {
-  loadPixels();
+void createBG() {
+  bg = createGraphics(width, height);
+  bg.beginDraw();
+  bg.loadPixels();
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       float n = noise(x * bgScale, y * bgScale);
-      pixels[y * width + x] = lerpColor(bgDark, bgLight, n);
+      bg.pixels[y * width + x] = lerpColor(bgDark, bgLight, n);
     }
   }
-  updatePixels();
+  bg.updatePixels();
+  bg.endDraw();
 }
 
 void drawField() {
@@ -112,7 +130,13 @@ void drawField() {
   }
 }
 
+float noise_offset = 0;
+float noise_delta = 0.001;
 void draw() {
+  createField(noise_offset);
+  drawBG();
+  drawLines();
+  noise_offset += noise_delta;
 }
 
 void keyPressed() {
@@ -122,7 +146,7 @@ void keyPressed() {
       saveFrame(String.format("out/%d.png", seed));
     }
     if (key == 'r') {
-      render();
+      oneShot();
     }
   }
 }
