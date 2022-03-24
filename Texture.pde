@@ -1,11 +1,11 @@
 void setBG() {
-  bg = createGraphics(width, height);
+  bg = createGraphics(width_, height_);
   bg.beginDraw();
   bg.loadPixels();
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
+  for (int x = 0; x < width_; x++) {
+    for (int y = 0; y < height_; y++) {
       float n = noise(x * bgScale, y * bgScale);
-      bg.pixels[y * width + x] = lerpColor(bgDark, bgLight, n);
+      bg.pixels[y * width_ + x] = lerpColor(bgDark, bgLight, n);
     }
   }
   bg.updatePixels();

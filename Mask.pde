@@ -2,20 +2,27 @@ void setMask() {
   imgMask = createGraphics(width, height);
   imgMask.beginDraw();
   imgMask.background(0);
-  imgMask.fill(255);
+
   imgMask.noStroke();
-  //imgMask.rectMode(CORNERS);
-  //imgMask.rect(100, 100, 700, 700);
+  imgMask.fill(255);
   imgMask.circle(width / 2, height / 2, width / 1.1);
   imgMask.fill(0);
-  //imgMask.stroke(0);
-  //imgMask.strokeWeight(40);
-  //imgMask.circle(width / 2, height / 2, width / 1.7);
-  int border = 300;
-  imgMask.triangle(width / 2, border,
-                   border, height - border,
-                   width - border, height - border);
+  imgMask.circle(width / 2, height / 2, width / 1.7);
+  //imgMask.fill(255);
+  //imgMask.circle(width / 2, height / 5, width / 5);
+
   imgMask.endDraw();
+}
+
+void setMask2() {
+  imgMask = createGraphics(width, height);
+  imgMask.beginDraw();
+  imgMask.background(0);
+  imgMask.noStroke();
+  imgMask.fill(255);
+  imgMask.circle(width / 2, height / 2, width / 1.7);
+  //imgMask.fill(0);
+  //imgMask.circle(width / 2, height / 5, width / 5);
 }
 
 void subtractiveMask(PGraphics graphics, PGraphics mask) {

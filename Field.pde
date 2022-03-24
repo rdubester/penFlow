@@ -10,7 +10,7 @@ void setField(float offset) {
   }
 }
 
-void drawField() {
+void showField() {
   for (int y = 0; y < rows; y++) {
     for (int x = 0; x < cols; x++) {
       PVector v = field[y][x];
@@ -43,16 +43,47 @@ void setStartPoints() {
   }
 }
 
-void drawLines() {
+float thresh = 0.3;
+
+void drawLines(boolean gradient) {
   g = createGraphics(width, height);
   g.beginDraw();
-  //g.blendMode(MULTIPLY);
   g.background(0, 0);
   for (PVector start : starts) {
-    penAlong(trajectory(start, steps), g, false);
+    int offset = (int) (start.x * start.y);
+    color s = lineColors[offset % 2];
+    if (gradient) {
+      float adjusted = 1 - (start.y / 800) - 0.3;
+      s = lerpColor(s, #ff9d8b, 2 * adjusted);
+      //s = lerpColor(s, 0, 2 * adjusted);
+    }
+    g.stroke(s);
+    penAlong(trajectory(start, steps), offset, false, g);
   }
   //g.mask(imgMask);
   subtractiveMask(g, imgMask);
   g.endDraw();
   image(g, 0, 0);
+}
+
+void rotate90(PVector[][] field) {
+  for (int i = 0; i < field.length; i++) {
+    for (int j = 0; j < field[0].length; j++) {
+      field[i][j].rotate(HALF_PI);
+    }
+  }
+}
+
+void slowTwist(PVector[][] field) {
+  for (int i = 0; i < field.length; i++) {
+    for (int j = 0; j < field[0].length; j++) {
+      float y_dist = i / (float) field.length;
+      //float thresh = 0.2059;
+      float adjusted = 1 - y_dist - thresh;
+      if (adjusted < 0) continue;
+      if (j == 0) println(i, y_dist, adjusted, adjusted * adjusted);
+      field[i][j].rotate(3 * TAU * adjusted * adjusted);
+      field[i][j].mult(1 + 10 * adjusted * adjusted);
+    }
+  }
 }
