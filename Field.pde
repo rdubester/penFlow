@@ -36,36 +36,6 @@ ArrayList<PVector> trajectory(PVector start, int steps) {
   return path;
 }
 
-void setStartPoints() {
-  starts = new PVector[numLines];
-  for (int i = 0; i < numLines; i++) {
-    starts[i] = new PVector(random(width), random(height));
-  }
-}
-
-float thresh = 0.3;
-
-void drawLines(boolean gradient) {
-  g = createGraphics(width, height);
-  g.beginDraw();
-  g.background(0, 0);
-  for (PVector start : starts) {
-    int offset = (int) (start.x * start.y);
-    color s = lineColors[offset % 2];
-    if (gradient) {
-      float adjusted = 1 - (start.y / 800) - 0.3;
-      s = lerpColor(s, #ff9d8b, 2 * adjusted);
-      //s = lerpColor(s, 0, 2 * adjusted);
-    }
-    g.stroke(s);
-    penAlong(trajectory(start, steps), offset, false, g);
-  }
-  //g.mask(imgMask);
-  subtractiveMask(g, imgMask);
-  g.endDraw();
-  image(g, 0, 0);
-}
-
 void rotate90(PVector[][] field) {
   for (int i = 0; i < field.length; i++) {
     for (int j = 0; j < field[0].length; j++) {

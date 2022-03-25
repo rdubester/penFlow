@@ -1,28 +1,36 @@
-void setMask() {
+void donutMask(float x, float y, float outer, float inner) {
   imgMask = createGraphics(width, height);
   imgMask.beginDraw();
   imgMask.background(0);
 
   imgMask.noStroke();
   imgMask.fill(255);
-  imgMask.circle(width / 2, height / 2, width / 1.1);
+  imgMask.circle(x, y, width * outer);
   imgMask.fill(0);
-  imgMask.circle(width / 2, height / 2, width / 1.7);
-  //imgMask.fill(255);
-  //imgMask.circle(width / 2, height / 5, width / 5);
-
+  imgMask.circle(x, y, width * inner);
   imgMask.endDraw();
 }
 
-void setMask2() {
+void circleMask(float x, float y, float rad) {
   imgMask = createGraphics(width, height);
   imgMask.beginDraw();
   imgMask.background(0);
   imgMask.noStroke();
   imgMask.fill(255);
-  imgMask.circle(width / 2, height / 2, width / 1.7);
+  imgMask.circle(x, y, width * rad);
   //imgMask.fill(0);
   //imgMask.circle(width / 2, height / 5, width / 5);
+}
+
+void noMask() {
+  imgMask = createGraphics(width, height);
+  imgMask.beginDraw();
+  imgMask.background(255);
+  imgMask.endDraw();
+}
+
+void invertMask(){
+  imgMask.filter(INVERT);
 }
 
 void subtractiveMask(PGraphics graphics, PGraphics mask) {
